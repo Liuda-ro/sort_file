@@ -7,25 +7,27 @@ def words_s():
         with open("text_file.txt", "r", encoding="utf-8") as file1:
             # Читаємо вміст файлу і беремо перше речення (до першої крапки)
             op_f = file1.read().split('.')[0] + '.'
-            print("Перше речення: \n", op_f)
+            if op_f.startswith("Помилка"):
+                print("Помилка при читанні файлу \n")
+            else:
+                print("Перше речення: \n", op_f)
+                # Видаляємо всі символи пунктуації, крім пробілів
+                normal_string = re.sub(r'[^\w\s]', '', op_f)
 
-            # Видаляємо всі символи пунктуації, крім пробілів
-            normal_string = re.sub(r'[^\w\s]', '', op_f)
+                # Розбиваємо речення на слова
+                words = normal_string.split()
 
-            # Розбиваємо речення на слова
-            words = normal_string.split()
+                # Розділяємо українські та англійські слова
+                ang_resalt = [word for word in words if re.match(r'[A-Za-z]+', word)]
+                uk_resalt = [word for word in words if re.match(r'[А-Яа-яЇїҐґЄєЮю]', word)]
 
-            # Розділяємо українські та англійські слова
-            ang_resalt = [word for word in words if re.match(r'[A-Za-z]+', word)]
-            uk_resalt = [word for word in words if re.match(r'[А-Яа-яЇїҐґЄєЮю]', word)]
+                # Сортуємо слова окремо для українських та англійських
+                ang_sort = sorted(ang_resalt, key=str.lower)
+                uk_sort = sorted(uk_resalt, key=str.lower)
 
-            # Сортуємо слова окремо для українських та англійських
-            ang_sort = sorted(ang_resalt, key=str.lower)
-            uk_sort = sorted(uk_resalt, key=str.lower)
-
-            # Виводимо відсортовані слова
-            print("Українські слова: \n", uk_sort)
-            print("Англійські слова: \n", ang_sort)
+                # Виводимо відсортовані слова
+                print("Українські слова: \n", uk_sort)
+                print("Англійські слова: \n", ang_sort)
 
             return print("Відсортовані слова: \n",uk_sort + ang_sort)  # Повертаємо результат як об'єднаний список
     except Exception as e:
